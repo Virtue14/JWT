@@ -1,5 +1,6 @@
 package com.virtue.securityjwt.config;
 
+import com.virtue.securityjwt.jwt.JWTUtil;
 import com.virtue.securityjwt.jwt.LoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +17,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
+
 
     @Autowired
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
         this.authenticationConfiguration = authenticationConfiguration;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -54,7 +58,7 @@ public class SecurityConfig {
                 );
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
 
         // Session 설정
