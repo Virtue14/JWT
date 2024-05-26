@@ -1,5 +1,6 @@
 package com.virtue.securityjwt.config;
 
+import com.virtue.securityjwt.jwt.JWTFilter;
 import com.virtue.securityjwt.jwt.JWTUtil;
 import com.virtue.securityjwt.jwt.LoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,9 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
+
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
